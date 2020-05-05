@@ -1,6 +1,8 @@
 import json
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
+import tflearn
+import tensorflow
 
 stemmer = LancasterStemmer()
 
@@ -41,7 +43,7 @@ labels = sorted(labels)
 # We need of array of integers bcoz - neural network expects an array of ints
 
 training = []  # filling using doc_x (patterns) in form of  0 & 1
-output = []    # filling using labels - on which index above (training) word lies
+output = []  # filling using labels - on which index above (training) word lies
 
 out_empty = [0 for _ in range(len(labels))]
 
@@ -64,3 +66,23 @@ for x, word_list in enumerate(list_of_words_in_patterns):
 
     training.append(bag)
     output.append(output_row)
+
+# PART 3 - DEVELOPING A MODEL
+# We will use Neural network with 2 hidden layers
+# The goal of our network will be to look at a bag of words and give a class(label) that they belong too
+
+tensorflow.reset_default_graph()
+
+net = tflearn.input_data(shape=[None, len(training[0])])
+net = tflearn.fully_connected(net, 8)
+net = tflearn.fully_connected(net, 8)
+net = tflearn.fully_connected(net, len(output[0]), activation="softmax")
+net = tflearn.regression(net)
+
+model = tflearn.DNN(net)
+
+# Training & Saving the Model
+
+# n_epoch = amount of times that the model will see the same information while training.
+model.fit(training, output, n_epoch=1000, batch_size=8, show_metric=True)
+model.save("model.tflearn")
