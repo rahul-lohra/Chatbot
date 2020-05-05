@@ -40,12 +40,13 @@ labels = sorted(labels)
 
 # We need of array of integers bcoz - neural network expects an array of ints
 
-training = []
-output = []
+training = []  # filling using doc_x (patterns) in form of  0 & 1
+output = []    # filling using labels - on which index above (training) word lies
 
 out_empty = [0 for _ in range(len(labels))]
 
 list_of_words_in_patterns = docs_x
+list_of_labels_mapped_with_patters = docs_y
 
 for x, word_list in enumerate(list_of_words_in_patterns):
     bag = []
@@ -59,9 +60,7 @@ for x, word_list in enumerate(list_of_words_in_patterns):
             bag.append(0)
 
     output_row = out_empty[:]
-    output_row[labels.index(docs_y[x])] = 1
+    output_row[labels.index(list_of_labels_mapped_with_patters[x])] = 1
 
     training.append(bag)
     output.append(output_row)
-
-print("h")
